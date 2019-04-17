@@ -2,41 +2,28 @@
   "name": "@fishtank/fishtank-vue",
   "version": "4.7.0",
   "private": false,
-  "license": "Apache-2.0",
-  "author": "Fish Tank Design System <agile_fishtank@bna.com>",
   "scripts": {
-    "clean": "rimraf dist/",
-    "dev": "yarn run serve",
     "serve": "vue-cli-service serve --open",
     "build": "yarn run clean && yarn build:esm && yarn build:cjs && yarn build:esm:dev && yarn build:cjs:dev && yarn build:esm:uncompiled && yarn build:cjs:uncompiled && yarn build:ts-types && yarn build:css",
-    "build:rollup": "yarn rollup -c",
+    "test": "vue-cli-service test:unit --require tests/setup.js",
+    "e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint",
+    "clean": "rimraf dist/",
     "build:esm": "yarn build:rollup --environment TARGET:esm --environment PROD:production",
     "build:cjs": "yarn build:rollup --environment TARGET:cjs --environment PROD:production",
     "build:esm:dev": "yarn build:rollup --environment TARGET:esm",
     "build:cjs:dev": "yarn build:rollup --environment TARGET:cjs",
-    "build:esm:uncompiled": "yarn build:rollup --environment TARGET:esm --environment compileCustomProperties:true",
+    "dev": "yarn run serve",
     "build:cjs:uncompiled": "yarn build:rollup --environment TARGET:cjs --environment compileCustomProperties:true",
     "build:ts-types": "node ./build/build-type-def.js",
     "build:css": "node ./build/build-individual-component-styles.js",
-    "test": "vue-cli-service test:unit --require tests/setup.js",
-    "e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
+    "storybook": "start-storybook",
+    "styleguide:build": "vue-cli-service styleguidist:build",
+    "build:rollup": "yarn rollup -c",
     "prepublish": "yarn build",
-    "release": "standard-version"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bloombergbna/fishtank-vue.git"
-  },
-  "main": "dist/fishtank-vue.common.min.js",
-  "module": "dist/fishtank-vue.esm.min.js",
-  "typings": "dist/fishtank-vue.d.ts",
-  "styles": "dist/fishtank-vue.css",
-  "peerDependencies": {
-    "vue": ">= 2.5.17"
+    "release": "standard-version",
+    "styleguide": "vue-cli-service styleguidist",
+    "build:esm:uncompiled": "yarn build:rollup --environment TARGET:esm --environment compileCustomProperties:true"
   },
   "dependencies": {
     "@fishtank/colors": "3.5.0",
@@ -51,8 +38,9 @@
     "vuejs-paginate": "1.9.3"
   },
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.49",
+    "@babel/core": "^7.1.0",
     "@babel/plugin-syntax-dynamic-import": "7.0.0-beta.49",
+    "@storybook/vue": "5.0.9",
     "@types/chai": "^4.1.0",
     "@types/lodash": "4.14.109",
     "@types/mocha": "^2.2.46",
@@ -73,6 +61,7 @@
     "@yelo/rollup-node-external": "1.0.1",
     "autoprefixer": "9.3.1",
     "babel-loader": "8.0.0-beta.3",
+    "babel-preset-vue": "2.0.2",
     "chai": "^4.1.2",
     "css-loader": "0.28.11",
     "eslint-plugin-prettier": "3.0.0",
@@ -111,6 +100,7 @@
     "typescript": "2.9.1",
     "uglify-es": "3.3.9",
     "vue": "2.5.17",
+    "vue-cli-plugin-styleguidist": "3.11.4",
     "vue-markdown": "^2.2.4",
     "vue-popperjs": "1.5.0",
     "vue-prism-component": "1.0.1",
@@ -125,5 +115,21 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bloombergbna/fishtank-vue.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "module": "dist/fishtank-vue.esm.min.js",
+  "typings": "dist/fishtank-vue.d.ts",
+  "styles": "dist/fishtank-vue.css",
+  "peerDependencies": {
+    "vue": ">= 2.5.17"
+  },
+  "author": "Fish Tank Design System <agile_fishtank@bna.com>",
+  "license": "Apache-2.0",
+  "main": "dist/fishtank-vue.common.min.js"
 }

@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import * as svgicon from 'vue-svgicon'
+// import * as svgicon from 'vue-svgicon'
 //Replace this with a Fish Tank icon
-import 'compiled-icons/fishtank'
+// import 'compiled-icons/fishtank'
 
 export default Vue.extend({
-  components: { svgicon },
+  // components: { svgicon },
   name: 'Tabs',
   props: {
     /**
