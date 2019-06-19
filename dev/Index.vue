@@ -7,6 +7,7 @@
       <li><a href="#/checkboxesv2">CheckboxesV2</a></li>
       <li><a href="#/buttons">Buttons</a></li>
       <li><a href="#/buttonsV2">ButtonsV2</a></li>
+      <li><a href="#/datepicker">Date Picker</a></li>
       <li><a href="#/radios">Radios</a></li>
       <li><a href="#/switches">Switches</a></li>
       <li><a href="#/modals">Modals</a></li>

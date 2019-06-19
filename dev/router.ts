@@ -24,6 +24,10 @@ export default new Router(<RouterOptions>{
     {
       path: '/buttonsV2',
       component: () => import("./views/ButtonsV2.vue")
+    },
+    {
+      path: '/datepicker',
+      component: () => import("./views/DatePicker.vue")
     }
     ,{
       path: '/radios',

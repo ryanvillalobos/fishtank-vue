@@ -48,6 +48,7 @@ export { default as FishTankButtonOutlineDarkSmall} from "./components/FishTankB
 export { default as FishTankCard } from "./components/FishTankCard.vue"
 export { default as FishTankCheckbox } from "./components/FishTankCheckbox.vue"
 export { default as FishTankCheckboxV2 } from "./components/FishTankCheckboxV2.vue"
+export { default as FishTankDatePicker } from "./components/FishTankDatePicker.vue"
 export { default as FishTankRadio } from "./components/FishTankRadio.vue"
 export { default as FishTankRadioGroup } from "./components/FishTankRadioGroup.vue"
 export { default as FishTankSwitch } from "./components/FishTankSwitch.vue"
