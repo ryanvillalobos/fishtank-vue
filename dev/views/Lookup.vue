@@ -2,12 +2,14 @@
   <div>
     <autocomplete
       id="autocomplete_example"
+      :items="items"
       v-model="selected"
       label="Autocomplete Label"
       orientation="ltr"
       url="/some_autocomplete_endpoint" />
     <div v-if="selected">
-      {{ selected.label }}
+      <span>label: {{selected.label}}, </span>
+      <span>value: {{selected.value}}</span>
     </div>
   </div>
 </template>
@@ -21,41 +23,14 @@ export default {
   data () {
     return {
       selected: null,
-      // exampleItems: [
-      //       { label: "Some item 1", value: "Some item 1" },
-      //       { label: "Some item 2", value: "Some item 2" },
-      //       { label: "Some item 3", value: "Some item 3" },
-      //       { label: "Some item 4", value: "Some item 4" },
-      //       { label: "Some item 5", value: "Some item 5" }
-      //     ]
+      items: [
+        { label: "Some item 1", value: "some-item-1" },
+        { label: "Some item 2", value: "some-item-2" },
+        { label: "Some item 3", value: "some-item-3" },
+        { label: "Some item 4", value: "some-item-4" },
+        { label: "Some item 5", value: "some-item-5" }
+      ]
     }
   },
-  created () {
-    moxios.install()
-    moxios.stubRequest(/\/some_autocomplete_endpoint\?query=.+$/, {
-      status: 200,
-      response: {
-        "data": {
-          "items": [
-            { label: "Some item 1", value: "Some item 1" },
-            { label: "Some item 2", value: "Some item 2" },
-            { label: "Some item 3", value: "Some item 3" },
-            { label: "Some item 4", value: "Some item 4" },
-            { label: "Some item 5", value: "Some item 5" }
-          ]
-        }
-      }
-    })
-
-    // Mock empty request
-    // moxios.stubRequest(/\/some_autocomplete_endpoint\?query=$/, {
-    //   status: 200,
-    //   response: {
-    //     "data": {
-    //       "items": []
-    //     }
-    //   }
-    // })
-  }
 }
 </script>
