@@ -71,6 +71,9 @@ export default {
       return this.items.filter(item => {
         return item.label.match(new RegExp(`(${this.query})`, 'ig'))
       })
+    },
+    identifier () {
+      return (Math.random() * 10000).toFixed(0).toString()
     }
   },
   watch: {
@@ -121,28 +124,42 @@ export default {
 </script>
 
 <template>
-  <div class="Autocomplete input-wrapper" @keydown="_handleKeydown">
+  <div
+    :id="id ? `${id}-combobox` : `${identifier}-combobox`" 
+    class="Autocomplete input-wrapper" 
+    role="combobox"
+    @keydown="_handleKeydown">
     <text-input
+      :id="id ? `${id}-input` : `${identifier}-input`"
       ref="query"
+      v-model="query"
       icon="search_24"
-      :id="id"
       :label="label"
       :orientation="orientation"
       :placeholder="placeholder"
-      v-model="query"
+      :aria-expanded="(focused && items ? true: false)" 
+      :aria-controls="`${id}-listbox`" 
+      :aria-activedescendant="`option-${focusedItem}`"
+      :aria-labelledby="label"
       @blur="focused=false"
       @focus="_onFocus"
       @clear="query=''">
       <template #below>
-        <div class="items" v-if="focused && filteredItems && query.length">
+        <div
+          v-if="focused && filteredItems && query.length" 
+          :id=" id ? `${id}-listbox` : `${identifier}-listbox`"
+          role="listbox"
+          class="items">
           <highlighted-text
             v-for="(item, index) in filteredItems"
-            :content="item.label"
             :key="index"
+            :content="item.label"
             :focused="focusedItem===index"
             :term="query"
+            :aria-labelledby="label"
+            role="option"
             @mousedown.native="() => _selectResult(item)"
-            @mouseover.native="focusedItem=index"/>
+            @mouseover.native="focusedItem=index" />
         </div>
       </template>
     </text-input>
