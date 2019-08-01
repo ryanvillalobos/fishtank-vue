@@ -1,6 +1,6 @@
 <script>
-import HighlightedText from './FishTankHighlightedText.vue'
-import TextInput from './FishTankTextInputV2.vue'
+import HighlightedText from "./FishTankHighlightedText.vue";
+import TextInput from "./FishTankTextInputV2.vue";
 
 /** Triggered when selecting a result
  * @event change
@@ -9,10 +9,10 @@ import TextInput from './FishTankTextInputV2.vue'
 
 export default {
   components: { HighlightedText, TextInput },
-  name: 'Autocomplete',
+  name: "Autocomplete",
   model: {
-    prop: 'value',
-    event: 'change'
+    prop: "value",
+    event: "change"
   },
   props: {
     /**
@@ -20,6 +20,18 @@ export default {
      */
     id: String,
 
+    /**
+     * Boolean to use custom slot for dropdown
+     */
+    customSlot: {
+      slotName: String,
+      selectable: Boolean,
+      searchableFields: undefined
+    },
+
+    /**
+     * Name
+     */
     /**
      * Label to display with input box
      */
@@ -35,7 +47,7 @@ export default {
      */
     orientation: {
       type: String,
-      default: 'ttb'
+      default: "ttb"
     },
 
     /**
@@ -59,29 +71,51 @@ export default {
      */
     value: Object
   },
-  data () {
+  data() {
     return {
+
       focused: false,
       focusedItem: 0,
-      query: this.value ? this.value.label : ''
-    }
+      query: this.value ? this.value.label : ""
+    };
   },
   computed: {
-    filteredItems () {
-      return this.items.filter(item => {
-        return item.label.match(new RegExp(`(${this.query})`, 'ig'))
-      })
+    filteredItems() {
+      if (this.customSlot) {
+        //Will query every field of the json unless prefixed -- add functionality later !
+        var newItems = [];
+        console.log("Items: ", this.items);
+        for (var item of this.items) {
+          console.log("Item: ", item);
+          for (var value in item) {
+            console.log("Value: ", value);
+            if (item[value].match(new RegExp(`(${this.query})`, "ig")))
+              newItems.push(item);
+            continue;
+          }
+        }
+        console.log(newItems);
+        return newItems;
+      } else {
+        return this.items.filter(item => {
+          return item.label.match(new RegExp(`(${this.query})`, "ig"));
+        });
+      }
     },
-    identifier () {
-      return (Math.random() * 10000).toFixed(0).toString()
+    filteredEmit() {
+       return this.filteredItems.map((item) => { this.$emit('update:content', item) })
+      //$emit('update:content', item)
+    },
+    identifier() {
+      return (Math.random() * 10000).toFixed(0).toString();
     }
   },
   watch: {
-    query () {
+    query() {
       // Only fire the change if the value doesn't match to
       // avoid dup event when selecting from dropdown
-      if (!this.value || this.value.label !== this.query) {
-        this.$emit('change', { label: this.query, value: null })
+      if (!this.value /*|| this.value.label !== this.query*/) {
+        this.$emit("change", { label: this.query, value: null });
       }
     }
   },
@@ -89,63 +123,73 @@ export default {
     /**
      * Clears current value
      */
-    clear () {
-      this.query = ''
+    clear() {
+      this.query = "";
     },
-    _onFocus (event) {
-      this.focused = true
-      event.target.select()
+    _onFocus(event) {
+      this.focused = true;
+      event.target.select();
     },
-    _handleKeydown (e) {
+    _handleKeydown(e) {
       switch (e.key) {
-        case 'ArrowUp':
-          this.focusedItem--
-          if (this.focusedItem < 0) this.focusedItem = this.filteredItems.length - 1
-          break
-        case 'ArrowDown':
-          this.focusedItem++
-          if (this.focusedItem >= this.filteredItems.length) this.focusedItem = 0
-          break
-        case 'Enter':
-          e.preventDefault()
-          this._selectResult(this.filteredItems[this.focusedItem] || { label: this.query, value: null })
-          break
+        case "ArrowUp":
+          this.focusedItem--;
+          if (this.focusedItem < 0)
+            this.focusedItem = this.filteredItems.length - 1;
+          break;
+        case "ArrowDown":
+          this.focusedItem++;
+          if (this.focusedItem >= this.filteredItems.length)
+            this.focusedItem = 0;
+          break;
+        case "Enter":
+          e.preventDefault();
+          this._selectResult(
+            this.filteredItems[this.focusedItem] || {
+              label: this.query,
+              value: null
+            }
+          );
+          break;
         default:
-          this.focused = true
+          this.focused = true;
       }
     },
-    _selectResult (item) {
-      this.focused = false
-      this.query = item.label
-      this.$emit('change', item)
+    _selectResult(item) {
+      this.focused = false;
+      this.query = item.label;
+      this.$emit("change", item);
     }
   }
-}
+};
 </script>
 
 <template>
   <div
-    :id="id ? `${id}-combobox` : `${identifier}-combobox`" 
-    class="Autocomplete input-wrapper" 
+    :id="id ? `${id}-combobox` : `${identifier}-combobox`"
+    class="Autocomplete input-wrapper"
     role="combobox"
-    @keydown="_handleKeydown">
+    @keydown="_handleKeydown"
+  >
     <text-input
       :id="id ? `${id}-input` : `${identifier}-input`"
+      autocomplete = "off"
       ref="query"
       v-model="query"
       icon="search_24"
       :label="label"
       :orientation="orientation"
       :placeholder="placeholder"
-      :aria-expanded="(focused && items ? true: false)" 
-      :aria-controls="`${id}-listbox`" 
+      :aria-expanded="(focused && items ? true: false)"
+      :aria-controls="`${id}-listbox`"
       :aria-activedescendant="`option-${focusedItem}`"
       :aria-labelledby="label"
       @blur="focused=false"
       @focus="_onFocus"
-      @clear="query=''">
+      @clear="query=''"
+    >
       <template #below>
-        <div
+        <!-- <div
           v-if="focused && filteredItems && query.length" 
           :id=" id ? `${id}-listbox` : `${identifier}-listbox`"
           role="listbox"
@@ -160,7 +204,32 @@ export default {
             role="option"
             @mousedown.native="() => _selectResult(item)"
             @mouseover.native="focusedItem=index" />
-        </div>
+        </div>-->
+        <template v-if="customSlot">
+          <div
+            v-if="focused && filteredItems && query"
+            :id=" id ? `${id}-listbox` : `${identifier}-listbox`"
+            role="listbox"
+            class="items"
+          >
+            <div v-for="(item, index) in filteredEmit" :key="index"
+            >
+              <slot
+                class = "highlighted-text"
+                :name='customSlot.slotName'
+                content ="item"
+                :focused="focusedItem===index"
+                :term="query"
+                :aria-labelledby="label"
+                role="option"
+                @mousedown.native="() => _selectResult(item)"
+                @mouseover.native="focusedItem=index"
+              >
+                <!-- {{ item }} -->
+              </slot>
+            </div>
+          </div>
+        </template>
       </template>
     </text-input>
   </div>
@@ -168,7 +237,7 @@ export default {
 
 <style scoped lang="scss">
 .input-wrapper {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   position: relative;
 
   .items {
@@ -185,7 +254,9 @@ export default {
     width: 520px;
     z-index: 10;
 
-    &:empty { display: none; }
+    &:empty {
+      display: none;
+    }
 
     .HighlightedText {
       display: block;
