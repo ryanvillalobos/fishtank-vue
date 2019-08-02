@@ -33,15 +33,20 @@
         </div>
       </template>-->
       <template>
-        <div slot="profile" :content="content">
-          <div class="card">
-            <img :src="content.profile" alt="Avatar" style="width:100%" />
-            <div class="container">
-              <h4>
-                <b> {{ content.character }} </b>
-              </h4>
-              <p>Address: {{ content.address }}</p>
-              <p>Age: {{ content.age  }}</p>
+        <div slot-scope = "{ filteredItems, _selectResult }" :content="content">
+          <div v-for="(item, index) in filteredItems" :key="index">
+            <div 
+              class="card"
+              @mousedown.native="() => _selectResult(item)"
+              @mouseover.native="focusedItem=index">
+              <img :src="content.profile" alt="Avatar" style="width:100%" />
+              <div class="container">
+                <h4>
+                  <b> {{ content.character }} </b>
+                </h4>
+                <p>Address: {{ content.address }}</p>
+                <p>Age: {{ content.age  }}</p>
+              </div>
             </div>
           </div>
         </div>
